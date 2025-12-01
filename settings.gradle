@@ -9,6 +9,9 @@ plugins {
 toolchainManagement {
     jvm {
         javaRepositories {
+            // 0.7.0 does not expose a foojay() helper; configure the resolver class explicitly
+            repository("foojay") {
+                resolverClass = org.gradle.toolchains.foojay.FoojayToolchainResolver
             repository("foojay") {
                 resolver = foojay()
             }
