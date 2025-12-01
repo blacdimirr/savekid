@@ -3,4 +3,16 @@ plugins {
     id "org.gradle.toolchains.foojay-resolver-convention" version "0.8.0"
 }
 
+// Explicit toolchain repository definition to avoid "Toolchain download repositories have not been configured"
+// errors (e.g., when Gradle resolves IBM Semeru or other vendor-specific JDKs).
+toolchainManagement {
+    jvm {
+        javaRepositories {
+            repository("foojay") {
+                resolver = foojay()
+            }
+        }
+    }
+}
+
 rootProject.name = "tracker-server"
