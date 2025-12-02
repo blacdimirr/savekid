@@ -1,6 +1,30 @@
-plugins {
-    // Provides Foojay-based toolchain repository resolution for Gradle toolchain downloads
-    id "org.gradle.toolchains.foojay-resolver-convention" version "0.8.0"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
 }
+
+plugins {
+    // Configures trusted repositories for Gradle toolchain downloads (required for Gradle 9+)
+    // 0.7.0 avoids Gradle 9.1 NoSuchFieldError(IBM_SEMERU) seen with 0.8.x
+    id "org.gradle.toolchains.foojay-resolver-convention" version "0.7.0"
+}
+
+// Explicit toolchain repository definition to avoid "Toolchain download repositories have not been configured"
+// errors (e.g., when Gradle resolves IBM Semeru or other vendor-specific JDKs).
+/*toolchainManagement {
+    jvm {
+        javaRepositories {
+            // 0.7.0 does not expose a foojay() helper; configure the resolver class explicitly
+            repository("foojay") {
+                resolverClass = org.gradle.toolchains.foojay.FoojayToolchainResolver
+            repository("foojay") {
+                resolver = foojay()
+            }
+        }
+    }
+}*/
 
 rootProject.name = "tracker-server"

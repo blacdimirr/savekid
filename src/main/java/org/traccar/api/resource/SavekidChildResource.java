@@ -17,7 +17,9 @@ import org.traccar.model.Device;
 import org.traccar.model.SavekidChild;
 import org.traccar.model.SavekidHealthReport;
 import org.traccar.model.User;
+import org.traccar.permissions.PermissionsService;
 import org.traccar.service.SavekidHealthService;
+import org.traccar.storage.Storage;
 import org.traccar.storage.StorageException;
 import org.traccar.storage.query.Columns;
 import org.traccar.storage.query.Condition;
@@ -33,6 +35,12 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SavekidChildResource extends BaseResource {
+
+    @Inject
+    private Storage storage;
+
+    @Inject
+    private PermissionsService permissionsService;
 
     @Inject
     private SavekidHealthService healthService;
@@ -117,7 +125,7 @@ public class SavekidChildResource extends BaseResource {
     @Path("{id}")
     public Response remove(@PathParam("id") long id) throws StorageException {
         SavekidChild child = requireChild(id);
-        storage.removeObject(SavekidChild.class, new Request(new Condition.Equals("id", id)));
+        storage.removeObject(child, new Request(new Condition.Equals("id", id)));
         return Response.noContent().build();
     }
 
