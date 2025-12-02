@@ -6,6 +6,12 @@ plugins {
     id "com.github.ben-manes.versions" version "0.53.0"
 }
 
+// The Kordamp enforcer plugin registers `updateDaemonJvm`, which triggers Gradle's
+// toolchain resolution (and Foojay vendor mapping) even when the build already
+// runs on a suitable JDK. Disable it to avoid IBM_SEMERU vendor lookups on
+// environments where the resolver isn't available.
+tasks.matching { it.name == "updateDaemonJvm" }.configureEach { enabled = false }
+
 repositories {
     mavenCentral()
 }
