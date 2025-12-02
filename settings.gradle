@@ -1,3 +1,11 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 plugins {
     // Configures trusted repositories for Gradle toolchain downloads (required for Gradle 9+)
     // 0.7.0 avoids Gradle 9.1 NoSuchFieldError(IBM_SEMERU) seen with 0.8.x
