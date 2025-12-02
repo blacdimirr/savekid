@@ -2,14 +2,10 @@ plugins {
     id "java"
     id "checkstyle"
     id "com.google.protobuf" version "0.9.5"
-    id "org.kordamp.gradle.project-enforcer" version "0.14.0"
+    id "org.kordamp.gradle.project-enforcer" version "0.15.0"
     id "com.github.ben-manes.versions" version "0.53.0"
 }
 
-// The Kordamp enforcer plugin registers `updateDaemonJvm`, which triggers Gradle's
-// toolchain resolution (and Foojay vendor mapping) even when the build already
-// runs on a suitable JDK. Disable it to avoid IBM_SEMERU vendor lookups on
-// environments where the resolver isn't available.
 tasks.matching { it.name == "updateDaemonJvm" }.configureEach { enabled = false }
 
 repositories {
@@ -44,7 +40,6 @@ dependencyUpdates {
 }
 
 enforce {
-    // noinspection UnnecessaryQualifiedReference
     rule(enforcer.rules.EnforceBytecodeVersion) { r ->
         r.maxJdkVersion = "17"
     }
@@ -56,18 +51,18 @@ ext {
     jerseyVersion = "3.1.11"
     nettyVersion = "4.2.6.Final"
     protobufVersion = "4.32.1"
-    jxlsVersion = "2.14.0" // version 3 has breaking changes
+    jxlsVersion = "2.14.0"
     junixsocketVersion = "2.10.1"
 }
 
 def resolveTransitiveVersion = { String root, String group, String name ->
-    def dc = configurations.detachedConfiguration(dependencies.create(root))
-    dc.transitive = true
-    def artifact = dc.resolvedConfiguration.resolvedArtifacts.find {
-        it.moduleVersion.id.group == group && it.name == name
+    def dep = dependencies.create(root)
+    def conf = configurations.detachedConfiguration(dep)
+    def resolved = conf.incoming.resolutionResult.allComponents.find {
+        it.moduleVersion?.group == group && it.moduleVersion?.name == name
     }
-    if (!artifact) throw new GradleException("Couldn't resolve $group:$name from $root")
-    artifact.moduleVersion.id.version
+    if (!resolved) throw new GradleException("Couldn't resolve $group:$name from $root")
+    resolved.moduleVersion.version
 }
 
 ext.jacksonVersion = resolveTransitiveVersion(
@@ -87,6 +82,7 @@ protobuf {
 }
 
 dependencies {
+    // (mantengo tus dependencias tal cual)
     implementation "commons-codec:commons-codec:1.19.0"
     implementation "com.h2database:h2:2.3.232"
     implementation "com.mysql:mysql-connector-j:9.4.0"
