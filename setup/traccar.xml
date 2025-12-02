@@ -9,4 +9,7 @@
     <entry key='database.user'>sa</entry>
     <entry key='database.password'></entry>
 
+    <!-- SaveKID FA66S listener example -->
+    <!-- <entry key='protocol.fa66s.port'>5166</entry> -->
+
 </properties>
